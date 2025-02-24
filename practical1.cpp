@@ -4,6 +4,7 @@
 int main()
 {
     char str[100];
+    printf("Enter the string: ");
     scanf("%s", str);
     int i = 0;
     while (i < strlen(str) && str[i] == 'a')

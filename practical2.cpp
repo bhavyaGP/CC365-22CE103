@@ -4,94 +4,94 @@
 using namespace std;
 
 int main() {
-
+    // Input number of symbols
     int no_of_symbol;
-    cout << "Enter the number of symbols: ";
+    cout << "Number of input symbols : ";
     cin >> no_of_symbol;
 
+    // Input symbols
     vector<char> symbols(no_of_symbol);
-    cout << "Enter the symbols: ";
+    cout << "Input symbols : ";
     for (int i = 0; i < no_of_symbol; i++) {
         cin >> symbols[i];
     }
 
+    // Input number of states
     int states;
-    cout << "Enter the number of states: ";
+    cout << "Enter number of states : ";
     cin >> states;
 
-    vector<vector<int>> transition_table(no_of_symbol, vector<int>(states));
-    cout << "Enter the transition table:" << endl;
-    for (int i = 0; i < no_of_symbol; i++) {
-        for (int j = 0; j < states; j++) {
-            cout << "Transition for symbol '" << symbols[i] << "' from state " << j << ": ";
-            cin >> transition_table[i][j];
-        }
-    }
-
+    // Input initial state
     int initial_state;
-    cout << "Enter the initial state: ";
+    cout << "Initial state : ";
     cin >> initial_state;
 
+    // Input accepting states
     int no_accept;
-    cout << "Enter the number of accepting states: ";
+    cout << "Number of accepting states : ";
     cin >> no_accept;
 
     vector<int> accept_states(no_accept);
-    cout << "Enter the accepting states: ";
+    cout << "Accepting states : ";
     for (int i = 0; i < no_accept; i++) {
         cin >> accept_states[i];
+    }
+
+    // Input transition table
+    vector<vector<int>> transition_table(states + 1, vector<int>(no_of_symbol));
+    cout << "Transition table : " << endl;
+    for (int i = 1; i <= states; i++) {
+        for (int j = 0; j < no_of_symbol; j++) {
+            cout << i << " to " << symbols[j] << " -> ";
+            cin >> transition_table[i][j];
+        }
     }
 
     // Loop for testing multiple strings
     char test_more;
     do {
+        // Input string
         string str;
-        cout << "\nEnter the string to process: ";
+        cout << "\nInput string : ";
         cin >> str;
 
-        int current_state = initial_state;
-        bool valid = true;
-
         // Process the string
-        for (int i = 0; i < str.length(); i++) {
-            char current_symbol = str[i];
-            int symbol_index = -1;
+        int current_state = initial_state;
+        cout << "\nTransitions: " << endl;
+        cout << "Initial state: " << current_state << endl;
 
-            // Find the symbol index
+        for (char c : str) {
+            int symbol_index = -1;
             for (int j = 0; j < no_of_symbol; j++) {
-                if (current_symbol == symbols[j]) {
+                if (c == symbols[j]) {
                     symbol_index = j;
                     break;
                 }
             }
 
-            // Check for invalid symbol
             if (symbol_index == -1) {
-                cout << "Invalid symbol '" << current_symbol << "' in the string!" << endl;
-                valid = false;
-                break;
+                cout << "Invalid symbol '" << c << "' in the string!" << endl;
+                return 1;
             }
 
-            // Transition to the next state
-            current_state = transition_table[symbol_index][current_state];
-            cout << "After processing symbol '" << current_symbol << "', current state is: " << current_state << endl;
+            current_state = transition_table[current_state][symbol_index];
+            cout << "On input '" << c << "' moves to state " << current_state << endl;
         }
 
-        if (valid) {
-            // Check if the current state is accepting
-            bool is_accepted = false;
-            for (int i = 0; i < no_accept; i++) {
-                if (current_state == accept_states[i]) {
-                    is_accepted = true;
-                    break;
-                }
+        // Check if final state is accepting
+        bool is_accepted = false;
+        for (int accept_state : accept_states) {
+            if (current_state == accept_state) {
+                is_accepted = true;
+                break;
             }
+        }
 
-            if (is_accepted) {
-                cout << "The input string is accepted." << endl;
-            } else {
-                cout << "The input string is not accepted." << endl;
-            }
+        cout << "\nFinal state: " << current_state << endl;
+        if (is_accepted) {
+            cout << "String is accepted" << endl;
+        } else {
+            cout << "String is not accepted" << endl;
         }
 
         // Ask if the user wants to test another string
