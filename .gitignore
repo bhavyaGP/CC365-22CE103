@@ -1,4 +1,0 @@
-*.exe
-.vscode
-*.lex.yy.c
-input.c
